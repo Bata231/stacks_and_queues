@@ -10,6 +10,11 @@ Stack<ItemType>::Stack() {
 }
 
 template <typename ItemType>
+Stack<ItemType>::~Stack() {
+  this->clear();
+}
+
+template <typename ItemType>
 ItemType Stack<ItemType>::peek() {
      Node* current = head;
       while (current != nullptr) {
@@ -31,6 +36,19 @@ ItemType Stack<ItemType>::pop() {
 
 template <typename ItemType>
 void Stack<ItemType>::push(ItemType item) {
+  Node *newNode = new Node(item);
+  if (head == nullptr) {
+    head = newNode;
+  } else {
+    Node* current = head;
+
+    for (current = head; current != nullptr; current = current->next) {}
+    current->next = newNode;
+  }
+}
+
+template <typename ItemType>
+void Stack<ItemType>::operator +=(ItemType item) {
   Node *newNode = new Node(item);
   if (head == nullptr) {
     head = newNode;
