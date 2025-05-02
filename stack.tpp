@@ -26,7 +26,7 @@ ItemType Stack<ItemType>::peek() {
 template <typename ItemType>
 ItemType Stack<ItemType>::pop() {
   int nodeCount = 0;
-  for (Node* current = head; current != nullptr; current = current->next) {
+  for (Node* current = head; current->next != nullptr; current = current->next) {
     nodeCount++;
   }
   Node* current = head;
@@ -75,7 +75,7 @@ void Stack<ItemType>::operator -=(ItemType item) {
   Node *current = head;
   int nodeCount = 0;
 
-  while (current != nullptr && current->data != item) {
+  while (current->next != nullptr && current->data != item) {
     current = current->next;
     nodeCount++;
   }
@@ -108,14 +108,8 @@ int Stack<ItemType>::size() const  {
 
 template <typename ItemType>
 void Stack<ItemType>::clear() {
-  Node *current = head;
-
-  while (current != nullptr) {
-
-    const Node *secPointer = current;
-
-    current = current->next;
-    delete secPointer;
+  while (head != nullptr) {
+    *this -= head->data;
   }
 }
 
