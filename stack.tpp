@@ -25,13 +25,20 @@ ItemType Stack<ItemType>::peek() {
 
 template <typename ItemType>
 ItemType Stack<ItemType>::pop() {
-  Node* current = head;
-  for (int nodeCount = 0; nodeCount < Size() - 1; current = current->next) {
-      current = current->next;
+  int nodeCount = 0;
+  for (Node* current = head; current != nullptr; current = current->next) {
+    nodeCount++;
   }
-  Node* removeNode = current->next;
-  current->next = nullptr;
-  return removeNode->data;
+  Node* current = head;
+  for (int i = 0; i != nodeCount - 1; i++) {
+    current = current->next;
+  }
+  const Node* removeNode = current->next;
+  const Node* poppedNode = removeNode;
+  Node* reconnectNode = current->next->next;
+  current->next = reconnectNode;
+  delete removeNode;
+  return poppedNode->data;
 }
 
 template <typename ItemType>
@@ -42,7 +49,7 @@ void Stack<ItemType>::push(ItemType item) {
   } else {
     Node* current = head;
 
-    for (current = head; current != nullptr; current = current->next) {}
+    for (current = head; current->next != nullptr; current = current->next) {}
     current->next = newNode;
   }
 }
@@ -55,13 +62,43 @@ void Stack<ItemType>::operator +=(ItemType item) {
   } else {
     Node* current = head;
 
-    for (current = head; current != nullptr; current = current->next) {}
+    for (current = head; current->next != nullptr; current = current->next) {}
     current->next = newNode;
   }
 }
 
 template <typename ItemType>
-int Stack<ItemType>::size()  {
+void Stack<ItemType>::operator -=(ItemType item) {
+  if (head == nullptr) {
+    throw std::invalid_argument("list is empty");
+  }
+  Node *current = head;
+  int nodeCount = 0;
+
+  while (current != nullptr && current->data != item) {
+    current = current->next;
+    nodeCount++;
+  }
+
+  if (current == nullptr) {
+    throw std::invalid_argument("Item not found");
+  } else if (current == head) {
+      head = head->next;
+      delete current;
+  } else {
+      current = head;
+      for (int i = 0; i != nodeCount - 1; i++) {
+        current = current->next;
+      }
+    const Node* removeNode = current->next;
+    Node* reconnectNode = current->next->next;
+    current->next = reconnectNode;
+    delete removeNode;
+  }
+}
+
+template <typename ItemType>
+int Stack<ItemType>::size() const  {
   int size = 0;
   for (Node* current = head; current != nullptr; current = current->next) {
     size++;
@@ -77,13 +114,13 @@ void Stack<ItemType>::clear() {
 
     const Node *secPointer = current;
 
-    current = current->getNextNode();
+    current = current->next;
     delete secPointer;
   }
 }
 
 template <typename ItemType>
-bool Stack<ItemType>::isEmpty() {
+bool Stack<ItemType>::isEmpty() const {
   return head == nullptr;
 }
 
@@ -94,6 +131,4 @@ Stack<ItemType>::Node::Node(ItemType item) {
 }
 
 template <typename ItemType>
-Stack<ItemType>::Node::~Node(ItemType item) {
-
-}
+Stack<ItemType>::Node::~Node() = default;
