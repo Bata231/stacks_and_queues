@@ -14,29 +14,46 @@ template <typename ItemType>
 ItemType Queue<ItemType>::peek() {
     return head->item;
 }
-
 template <typename ItemType>
-ItemType Queue<ItemType>::dequeue() {
-    Node* current = head;
-    head = current->next;
-    delete current;
+Queue<ItemType>::~Queue() {
+    this->clear();
 }
-
 template <typename ItemType>
-void Stack<ItemType>::operator +=(ItemType item) {
+void Queue<ItemType>::enqueue(ItemType item) {
     Node *newNode = new Node(item);
     if (head == nullptr) {
         head = newNode;
     } else {
         Node* current = head;
 
-        for (current = head; current != nullptr; current = current->next) {}
+        for (current = head; current->next != nullptr; current = current->next) {}
         current->next = newNode;
     }
 }
 
 template <typename ItemType>
-void Stack<ItemType>::operator -=(ItemType item) {
+ItemType Queue<ItemType>::dequeue() {
+    Node* current = head;
+    head = current->next;
+    delete current;
+    return head->data;
+}
+
+template <typename ItemType>
+void Queue<ItemType>::operator +=(ItemType item) {
+    Node *newNode = new Node(item);
+    if (head == nullptr) {
+        head = newNode;
+    } else {
+        Node* current = head;
+
+        for (current = head; current->next != nullptr; current = current->next) {}
+        current->next = newNode;
+    }
+}
+
+template <typename ItemType>
+void Queue<ItemType>::operator -=(ItemType item) {
     if (head == nullptr) {
         throw std::invalid_argument("list is empty");
     }
@@ -54,7 +71,7 @@ void Stack<ItemType>::operator -=(ItemType item) {
         delete current;
     } else if (current->next == nullptr) {
         Node* removeLastNode = head;
-        for (int i = 0; i < this->Size() - 1; current = current->next) {
+        for (int i = 0; i < this->size() - 1; current = current->next) {
             removeLastNode = removeLastNode->next;
             i++;
         }
@@ -73,19 +90,13 @@ void Stack<ItemType>::operator -=(ItemType item) {
 
 template <typename ItemType>
 void Queue<ItemType>::clear() {
-    Node *current = head;
-
-    while (current != nullptr) {
-
-        const Node *secPointer = current;
-
-        current = current->getNextNode();
-        delete secPointer;
+    while (head != nullptr) {
+        *this -= head->data;
     }
 }
 
 template <typename ItemType>
-int Queue<ItemType>::size()  {
+int Queue<ItemType>::size() const  {
     int size = 0;
     for (Node* current = head; current != nullptr; current = current->next) {
         size++;
@@ -93,7 +104,7 @@ int Queue<ItemType>::size()  {
     return size;
 }
 template <typename ItemType>
-bool Queue<ItemType>::isEmpty() {
+bool Queue<ItemType>::isEmpty() const {
     return head == nullptr;
 }
 
