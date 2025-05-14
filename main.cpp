@@ -2,6 +2,11 @@
 #include <cassert>
 #include "stack.h"
 #include "queue.h"
+using std::cout;
+using std::endl;
+
+template <typename T>
+void print(const T t) { cout << t << endl; }
 
 void testStack() {
     Stack<int> stack;
@@ -16,7 +21,6 @@ void testStack() {
 
     assert(!stack.isEmpty());
     stack.clear();
-    std::cout << stack.size() << std::endl;
     assert(stack.isEmpty());
 
     stack += 7;
@@ -39,22 +43,32 @@ void testStack() {
     stack.push(3);
     assert(stack.peek() == 3);
     stack -=1;
-    //assert(stack.peek() == 2);
+    assert(stack.peek() == 3);
 }
+
 void testQueue() {
     Queue<int> queue;
-    queue += 2;
+    queue.enqueue(2);
     queue += 4;
-    queue += 4;
+    queue.enqueue(2);
     queue.enqueue(5);
+    queue += 3;
     queue.enqueue(6);
-    queue.dequeue();
-    assert(queue.peek() == 4);
-    assert(queue.size() == 4);
+    //queue.dequeue();
+    queue -= 6;
+    queue += 7;
+    queue.clear();
+    print(queue.size());
+    queue.enqueue(2);
+    queue.enqueue(2);
+    queue.enqueue(5);
+    assert(queue.peek() == 2);
+    print(queue.size());
+    assert(queue.size() == 3);
 
 
-    queue -= 4;
-    queue -= 4;
+    queue -= 2;
+    queue -= 2;
     assert(!queue.isEmpty());
     queue.clear();
     assert(queue.isEmpty());
@@ -75,7 +89,7 @@ void testQueue() {
 }
 int main() {
 
-    //testStack();
+    testStack();
     testQueue();
     return 0;
 }
